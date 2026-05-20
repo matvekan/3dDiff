@@ -7,9 +7,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libicu-dev \
     libzip-dev \
+    libpq-dev \
     && pecl install redis \
     && docker-php-ext-enable redis \
-    && docker-php-ext-install pdo pdo_mysql intl zip \
+    && docker-php-ext-install pdo pdo_pgsql intl zip \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*

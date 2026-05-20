@@ -14,11 +14,13 @@
         "symfony/dotenv": "8.0.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.0.*",
+        "symfony/messenger": "8.0.*",
         "symfony/runtime": "8.0.*",
         "symfony/security-bundle": "8.0.*",
         "symfony/uid": "8.0.*",
         "symfony/validator": "8.0.*",
-        "symfony/yaml": "8.0.*"
+        "symfony/yaml": "8.0.*",
+        "yokai/doctrine-value-object": "^0.2.0"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.67"

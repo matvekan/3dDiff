@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Application\Dto;
+
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Role;
+use DateTimeImmutable;
+use JsonSerializable;
+
+
+class UserDto implements JsonSerializable
+{
+    public function __construct(
+        private string $id,
+        private string $email,
+        private string $name,
+        private string $role,
+        private ?DateTimeImmutable $createdAt,
+        private array $interests,
+    )
+    {}
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function getCreatedAt(): ?DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getInterest(): array
+    {
+        return $this->interests;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'role' => $this->role,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'name' => $this->name,
+            'interests' => $this->interests,
+        ];
+    }
+}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a250abfabaa27801f8acb172a07700ce",
+    "content-hash": "310bc42b83cee1724d64afd695fcc575",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -2905,6 +2905,96 @@
             "time": "2026-05-06T12:27:31+00:00"
         },
         {
+            "name": "symfony/messenger",
+            "version": "v8.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/messenger.git",
+                "reference": "c451c175724fc781c777783aaec3b7999ceb0621"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/c451c175724fc781c777783aaec3b7999ceb0621",
+                "reference": "c451c175724fc781c777783aaec3b7999ceb0621",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "psr/log": "^1|^2|^3",
+                "symfony/clock": "^7.4|^8.0"
+            },
+            "conflict": {
+                "symfony/console": "<7.4",
+                "symfony/event-dispatcher-contracts": "<2.5",
+                "symfony/lock": "<7.4",
+                "symfony/serializer": "<7.4.4|>=8.0,<8.0.4"
+            },
+            "require-dev": {
+                "psr/cache": "^1.0|^2.0|^3.0",
+                "symfony/console": "^7.4|^8.0",
+                "symfony/dependency-injection": "^7.4|^8.0",
+                "symfony/event-dispatcher": "^7.4|^8.0",
+                "symfony/http-kernel": "^7.4|^8.0",
+                "symfony/lock": "^7.4|^8.0",
+                "symfony/process": "^7.4|^8.0",
+                "symfony/property-access": "^7.4|^8.0",
+                "symfony/rate-limiter": "^7.4|^8.0",
+                "symfony/routing": "^7.4|^8.0",
+                "symfony/serializer": "^7.4.4|^8.0.4",
+                "symfony/service-contracts": "^2.5|^3",
+                "symfony/stopwatch": "^7.4|^8.0",
+                "symfony/validator": "^7.4|^8.0",
+                "symfony/var-dumper": "^7.4|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Messenger\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Samuel Roze",
+                    "email": "samuel.roze@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Helps applications send and receive messages to/from other applications or via message queues",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/messenger/tree/v8.0.11"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-05-13T12:07:53+00:00"
+        },
+        {
             "name": "symfony/password-hasher",
             "version": "v8.0.8",
             "source": {
@@ -4883,6 +4973,118 @@
                 }
             ],
             "time": "2026-05-05T08:10:04+00:00"
+        },
+        {
+            "name": "webmozart/assert",
+            "version": "1.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozarts/assert.git",
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
+                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-date": "*",
+                "ext-filter": "*",
+                "php": "^7.2 || ^8.0"
+            },
+            "suggest": {
+                "ext-intl": "",
+                "ext-simplexml": "",
+                "ext-spl": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.10-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "Assertions to validate method input/output with nice error messages.",
+            "keywords": [
+                "assert",
+                "check",
+                "validate"
+            ],
+            "support": {
+                "issues": "https://github.com/webmozarts/assert/issues",
+                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
+            },
+            "time": "2025-10-29T15:56:20+00:00"
+        },
+        {
+            "name": "yokai/doctrine-value-object",
+            "version": "v0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yokai-php/doctrine-value-object.git",
+                "reference": "b722f1d8b24dc22f07a7a87b42b732109f4bd9bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yokai-php/doctrine-value-object/zipball/b722f1d8b24dc22f07a7a87b42b732109f4bd9bc",
+                "reference": "b722f1d8b24dc22f07a7a87b42b732109f4bd9bc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^3.8|^4.0",
+                "doctrine/orm": "^2.7|^3.1",
+                "php": "^8.0",
+                "webmozart/assert": "^1.11"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.11",
+                "phpunit/phpunit": "^9.4",
+                "squizlabs/php_codesniffer": "^3.9",
+                "symfony/cache": "^5.4|^6.0|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Yokai\\DoctrineValueObject\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yann Eugoné",
+                    "email": "eugone.yann@gmail.com"
+                }
+            ],
+            "description": "Value Objects for Doctrine ORM simplified",
+            "keywords": [
+                "Value Object",
+                "doctrine",
+                "orm"
+            ],
+            "support": {
+                "issues": "https://github.com/yokai-php/doctrine-value-object/issues",
+                "source": "https://github.com/yokai-php/doctrine-value-object/tree/v0.2.0"
+            },
+            "time": "2024-07-08T13:34:20+00:00"
         }
     ],
     "packages-dev": [

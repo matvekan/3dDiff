@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Entity;
 
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Role;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,20 +18,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[UniqueEntity(fields: ['email'], message: 'Email already used.')]
 class User extends AbstractEntity implements UserInterface
 {
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(type: "name",length: 255)]
+    private Name $name;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 20)]
-    private ?string $role = null;
+    #[ORM\Column(type: 'string', nullable: true, enumType: Role::class)]
+    private ?Role $role = Role::USER;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $email = null;
+    #[ORM\Column(type: "email")]
+    private Email $email;
 
     /**
      * @var Collection<int, Interest>
@@ -38,12 +44,12 @@ class User extends AbstractEntity implements UserInterface
         $this->interest = new ArrayCollection();
     }
 
-    public function getName(): ?string
+    public function getName(): Name
     {
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(Name $name): static
     {
         $this->name = $name;
 
@@ -64,12 +70,12 @@ class User extends AbstractEntity implements UserInterface
 
     public function getRole(): ?string
     {
-        return $this->role;
+        return $this->role->value;
     }
 
     public function setRole(string $role): static
     {
-        $this->role = strtoupper($role);
+        $this->role = Role::cases()[$role];
 
         return $this;
     }
@@ -103,27 +109,27 @@ class User extends AbstractEntity implements UserInterface
             throw new \LogicException('User email must be set before authentication.');
         }
 
-        return $this->email;
+        return $this->email->toValue();
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): Email
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(Email $email): static
     {
         $this->email = $email;
 

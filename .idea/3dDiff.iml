@@ -68,6 +68,9 @@
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/type-info" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/uid" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/validator" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/yokai/doctrine-value-object" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/messenger" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
