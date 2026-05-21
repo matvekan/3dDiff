@@ -15,8 +15,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
+#[ORM\Table(name: 'users')]
 #[UniqueEntity(fields: ['email'], message: 'Email already used.')]
-class User extends AbstractEntity implements UserInterface
+class User extends AbstractEntity implements UserInterface, \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
     #[ORM\Column(type: "name",length: 255)]
     private Name $name;
@@ -75,7 +76,7 @@ class User extends AbstractEntity implements UserInterface
 
     public function setRole(string $role): static
     {
-        $this->role = Role::cases()[$role];
+        $this->role = Role::from($role);
 
         return $this;
     }
@@ -160,4 +161,9 @@ class User extends AbstractEntity implements UserInterface
         return $this;
     }
 
+
+    public function getInterestIds(): array
+    {
+        return $this->interest->getValues();
+    }
 }

@@ -12,11 +12,11 @@ interface UserRepositoryInterface
 {
     public function save(User $user): void;
 
-    public function findByEmail(string $email): ?User;
+    public function getByEmail(string $email): ?User;
 
-    public function findByUsername(string $username): ?User;
+    public function getByUsername(string $username): ?User;
 
-    public function findById(Uuid $id): ?User;
+    public function getById(string $id): ?User;
 
     public function remove(User $user): void;
 

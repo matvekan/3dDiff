@@ -8,7 +8,10 @@ use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Uid\Uuid;
+
+/**
+ * @extends ServiceEntityRepository<User>
+ */
 
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
 {
@@ -24,19 +27,19 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $this->getEntityManager()->flush();
     }
 
-    public function findByEmail(string $email): ?User
+    public function getByEmail(string $email): ?User
     {
         return null;
     }
 
-    public function findByUsername(string $username): ?User
+    public function getByUsername(string $username): ?User
     {
         return null;
     }
 
-    public function findById(Uuid $id): ?User
+    public function getById(string $id): User
     {
-        $user = $this->findById($id);
+        $user = $this->findOneBy(["id" => $id]);
 
         if (!$user) {
             throw new UserNotFoundException();

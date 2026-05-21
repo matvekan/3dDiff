@@ -15,8 +15,13 @@ class UserDtoFactory
             $user->getName(),
             $user->getRole(),
             $user->getCreatedAt(),
-            $user->getInterest()->toArray()
+            $user->getInterestIds()
         );
+    }
+
+    public function createFromArray(array $users): array
+    {
+        return array_map(fn(User $user) => $this->create($user), $users);
     }
 
 }
