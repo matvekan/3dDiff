@@ -5,6 +5,8 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Entity\Interest;
 use App\Domain\Entity\User;
 use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\ValueObject\Email;
+use App\Domain\ValueObject\Name;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -27,14 +29,29 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $this->getEntityManager()->flush();
     }
 
-    public function getByEmail(string $email): ?User
+    public function getByEmail(string $email): User
     {
-        return null;
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', new Email($email))
+            ->orderBy('u.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+        return $user;
     }
 
-    public function getByUsername(string $username): ?User
+    public function getByName(string $name): User
     {
-        return null;
+        $user = $this->findOneBy(['name' => new Name($name)]);
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
+        return $user;
     }
 
     public function getById(string $id): User
@@ -50,7 +67,8 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
     public function remove(User $user): void
     {
-        $this->remove($user);
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
     }
 
     public function getByInterest(Interest $interest): array

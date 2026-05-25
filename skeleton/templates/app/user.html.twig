@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Кабинет пользователя</title>
+    <style>
+        :root { --line:#d4dbe2; --blue:#1f4e79; --blue2:#173a5b; --bg:#f5f7fa; }
+        * { box-sizing: border-box; }
+        body { margin:0; background:var(--bg); font:16px/1.45 Georgia, "Times New Roman", serif; color:#1f2a36; }
+        .wrap { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+        .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:12px; }
+        h1 { margin: 0 0 8px; }
+        a { color: var(--blue); }
+        input, button { padding: 9px; border-radius: 6px; border:1px solid #b9c5d0; font: 15px Georgia, "Times New Roman", serif; }
+        button { background: var(--blue); color:#fff; border:0; cursor:pointer; }
+        button:hover { background: var(--blue2); }
+        .item { display:inline-block; border:1px solid #9eb0c2; border-radius:14px; padding:5px 10px; margin:4px; cursor:pointer; background:#fff; }
+        .on { background:#e6eff8; border-color:#6288ad; }
+        #msg { white-space: pre-wrap; background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px; min-height:44px; }
+    </style>
+</head>
+<body>
+<main class="wrap">
+    <h1>Кабинет пользователя</h1>
+    <p><a href="/">На главную</a></p>
+
+    <section class="card">
+        <h3>Профиль</h3>
+        <p id="profile">Загрузка...</p>
+    </section>
+
+    <section class="card">
+        <h3>Интересы</h3>
+        <div id="interests"></div>
+        <button id="saveInterests">Сохранить интересы</button>
+    </section>
+
+    <section class="card">
+        <h3>Сброс пароля по токену</h3>
+        <input id="resetToken" placeholder="Token из письма">
+        <input id="newPassword" type="password" placeholder="Новый пароль">
+        <button id="resetBtn">Сменить пароль</button>
+    </section>
+
+    <section id="msg">Готово.</section>
+</main>
+
+<script>
+const token = localStorage.getItem('token');
+if (!token) location.href = '/';
+
+const authHeaders = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token};
+const profileEl = document.getElementById('profile');
+const msgEl = document.getElementById('msg');
+const interestsEl = document.getElementById('interests');
+let selected = new Set();
+
+function show(d) {
+    if (typeof d === 'string') {
+        msgEl.textContent = d;
+        return;
+    }
+    if (d && typeof d === 'object') {
+        msgEl.textContent = d.message || d.error || 'Готово';
+        return;
+    }
+    msgEl.textContent = 'Готово';
+}
+
+async function parseResponse(res) {
+    const text = await res.text();
+    if (!text) return null;
+    try { return JSON.parse(text); } catch (_) { return text; }
+}
+
+async function loadProfile() {
+    const res = await fetch('/api/v1/me', {headers: {'Authorization': 'Bearer ' + token}});
+    const data = await res.json();
+    if (!res.ok) {
+        show(data);
+        return;
+    }
+    profileEl.textContent = 'Вы авторизованы как ' + (data.name || 'пользователь') + '.';
+    (data.interests || []).forEach(i => selected.add(i.id));
+}
+
+async function loadInterests() {
+    const res = await fetch('/api/v1/interests');
+    const list = await res.json();
+    interestsEl.innerHTML = '';
+    list.forEach(i => {
+        const el = document.createElement('span');
+        el.className = 'item' + (selected.has(i.id) ? ' on' : '');
+        el.textContent = i.name;
+        el.onclick = () => {
+            if (selected.has(i.id)) selected.delete(i.id); else selected.add(i.id);
+            el.classList.toggle('on');
+        };
+        interestsEl.appendChild(el);
+    });
+}
+
+document.getElementById('saveInterests').onclick = async () => {
+    show('Сохраняем интересы...');
+    const res = await fetch('/api/v1/me/interests', {
+        method: 'PUT',
+        headers: authHeaders,
+        body: JSON.stringify({interestIds: [...selected]})
+    });
+    show(await parseResponse(res));
+    await loadProfile();
+};
+
+document.getElementById('resetBtn').onclick = async () => {
+    show('Меняем пароль...');
+    const tokenValue = document.getElementById('resetToken').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const res = await fetch('/api/v1/auth/reset-password', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token: tokenValue, newPassword})
+    });
+    show(await parseResponse(res));
+};
+
+loadProfile().then(loadInterests);
+</script>
+</body>
+</html>

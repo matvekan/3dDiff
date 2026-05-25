@@ -14,7 +14,7 @@ interface UserRepositoryInterface
 
     public function getByEmail(string $email): ?User;
 
-    public function getByUsername(string $username): ?User;
+    public function getByName(string $name): ?User;
 
     public function getById(string $id): ?User;
 

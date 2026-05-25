@@ -9,7 +9,7 @@ use App\Domain\Entity\PasswordReset;
 
 interface PasswordResetRepositoryInterface
 {
-    public function store(PasswordReset $passwordReset, bool $isFlush = true): PasswordReset;
+    public function save(PasswordReset $passwordReset): PasswordReset;
 
     public function findValidByToken(string $token): ?PasswordReset;
 }

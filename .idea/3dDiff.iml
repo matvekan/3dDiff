@@ -76,6 +76,13 @@
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/phpstan/phpdoc-parser" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/serializer" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/mime" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/twig-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/twig/twig" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Админ-панель</title>
+    <style>
+        :root { --line:#d4dbe2; --blue:#1f4e79; --blue2:#173a5b; --bg:#f5f7fa; }
+        * { box-sizing: border-box; }
+        body { margin:0; background:var(--bg); font:16px/1.45 Georgia, "Times New Roman", serif; color:#1f2a36; }
+        .wrap { max-width: 1120px; margin: 24px auto; padding: 0 16px; }
+        .card { background:#fff; border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:12px; }
+        input, select, button { padding: 9px; border-radius: 6px; border:1px solid #b9c5d0; font: 15px Georgia, "Times New Roman", serif; }
+        button { background: var(--blue); color:#fff; border:0; cursor:pointer; }
+        button:hover { background: var(--blue2); }
+        .filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 12px; background:#fff; }
+        td, th { border: 1px solid #d5dce3; padding: 8px; vertical-align: top; }
+        thead { background:#edf2f7; }
+        #msg { white-space: pre-wrap; min-height: 44px; }
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: none; align-items: center; justify-content: center; z-index: 40; }
+        .modal { width: min(620px, calc(100vw - 24px)); background:#fff; border:1px solid #d5dce3; border-radius:10px; padding:14px; }
+        .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+        .danger { background:#8a2e28; }
+    </style>
+</head>
+<body>
+<main class="wrap">
+    <h1>Админ-панель</h1>
+    <p><a href="/">На главную</a></p>
+
+    <section class="card">
+        <h3>Фильтры пользователей</h3>
+        <div class="filters">
+            <input id="fName" placeholder="name">
+            <input id="fEmail" placeholder="email">
+            <select id="fRole">
+                <option value="">all roles</option>
+                <option value="ROLE_USER">ROLE_USER</option>
+                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+            </select>
+            <input id="fInterest" placeholder="interest">
+            <button id="filterBtn">Фильтровать</button>
+        </div>
+    </section>
+
+    <section class="card">
+        <h3>Добавить новый интерес</h3>
+        <div class="filters">
+            <input id="newInterestName" placeholder="Название интереса">
+            <button id="addInterestBtn">Добавить интерес</button>
+        </div>
+        <div id="interestManager" style="margin-top:10px;"></div>
+    </section>
+
+    <section class="card">
+        <table>
+            <thead>
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Интересы пользователя</th><th>Действия</th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+        </table>
+    </section>
+
+    <section id="msg" class="card">Готово.</section>
+</main>
+
+<div id="editModalBackdrop" class="modal-backdrop">
+    <div class="modal">
+        <h3 style="margin-top:0;">Редактирование пользователя</h3>
+        <input type="hidden" id="mUserId">
+
+        <label for="mName">Имя</label>
+        <input id="mName">
+
+        <label for="mRole" style="display:block; margin-top:8px;">Роль</label>
+        <select id="mRole">
+            <option value="ROLE_USER">ROLE_USER</option>
+            <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+        </select>
+
+        <label style="display:block; margin-top:8px;">Интересы</label>
+        <div id="mInterests" style="border:1px solid #b9c5d0; border-radius:6px; padding:8px; max-height:220px; overflow:auto;"></div>
+
+        <div class="modal-actions">
+            <button id="mCancelBtn" type="button">Отмена</button>
+            <button id="mSaveBtn" type="button">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem('token');
+const role = localStorage.getItem('role');
+if (!token || role !== 'ROLE_ADMIN') location.href = '/';
+
+const rows = document.getElementById('rows');
+const msg = document.getElementById('msg');
+function show(d) {
+    if (typeof d === 'string') {
+        msg.textContent = d;
+        return;
+    }
+    if (d && typeof d === 'object') {
+        msg.textContent = d.message || d.error || 'Готово';
+        return;
+    }
+    msg.textContent = 'Готово';
+}
+
+async function parseResponse(res) {
+    const text = await res.text();
+    if (!text) return null;
+    try { return JSON.parse(text); } catch (_) { return text; }
+}
+let allInterests = [];
+let usersCache = [];
+
+function esc(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+async function loadInterests() {
+    const res = await fetch('/api/v1/interests');
+    allInterests = await res.json();
+    renderInterestManager();
+}
+
+function renderInterestManager() {
+    const box = document.getElementById('interestManager');
+    if (!allInterests.length) {
+        box.innerHTML = '<p>Интересов пока нет.</p>';
+        return;
+    }
+
+    const rows = allInterests.map(i => `
+        <div style="display:flex; gap:8px; margin:6px 0; align-items:center;">
+            <input id="interest_name_${esc(i.id)}" value="${esc(i.name)}" style="max-width:260px;">
+            <button class="interestSaveBtn" data-id="${esc(i.id)}">Сохранить</button>
+            <button class="interestDeleteBtn" data-id="${esc(i.id)}" style="background:#8a2e28;">Удалить</button>
+        </div>
+    `).join('');
+
+    box.innerHTML = `<h4 style="margin:8px 0;">Редактирование интересов</h4>${rows}`;
+
+    document.querySelectorAll('.interestSaveBtn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const name = document.getElementById('interest_name_' + id).value.trim();
+            if (!name) {
+                show('Название интереса не может быть пустым');
+                return;
+            }
+            const res = await fetch('/api/v1/interests/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({name})
+            });
+            show(await parseResponse(res));
+            await loadInterests();
+            await loadUsers();
+        });
+    });
+
+    document.querySelectorAll('.interestDeleteBtn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            if (!confirm('Удалить интерес?')) return;
+            const res = await fetch('/api/v1/interests/' + id, {
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + token}
+            });
+            show(await parseResponse(res));
+            await loadInterests();
+            await loadUsers();
+        });
+    });
+}
+
+function closeModal() {
+    document.getElementById('editModalBackdrop').style.display = 'none';
+}
+
+function openModal(user) {
+    document.getElementById('mUserId').value = user.id;
+    document.getElementById('mName').value = user.name || '';
+    document.getElementById('mRole').value = user.role || 'ROLE_USER';
+    const selected = new Set((user.interests || []).map(i => i.id));
+    const options = allInterests.map(i => {
+        const mark = selected.has(i.id) ? ' checked' : '';
+        return `
+            <label style="display:flex; align-items:center; gap:8px; margin:4px 0; cursor:pointer;">
+                <input type="checkbox" class="mInterestCheck" value="${esc(i.id)}"${mark}>
+                <span>${esc(i.name)}</span>
+            </label>
+        `;
+    }).join('');
+    document.getElementById('mInterests').innerHTML = options;
+    document.getElementById('editModalBackdrop').style.display = 'flex';
+}
+
+async function loadUsers() {
+    show('Загружаем пользователей...');
+    const q = new URLSearchParams({
+        name: document.getElementById('fName').value,
+        email: document.getElementById('fEmail').value,
+        role: document.getElementById('fRole').value,
+        interest: document.getElementById('fInterest').value
+    });
+    const res = await fetch('/api/v1/admin/users?' + q.toString(), {
+        headers: {'Authorization': 'Bearer ' + token}
+    });
+    const data = await res.json();
+    if (!res.ok) {
+        show(data);
+        return;
+    }
+    usersCache = data;
+    rows.innerHTML = '';
+    data.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${esc(u.id)}</td>
+            <td>${esc(u.name)}</td>
+            <td>${esc(u.email)}</td>
+            <td>${esc(u.role)}</td>
+            <td>${esc((u.interests || []).map(i => i.name).join(', ') || '-')}</td>
+            <td><button data-id="${esc(u.id)}" class="editBtn">Редактировать</button></td>
+        `;
+        rows.appendChild(tr);
+    });
+
+    document.querySelectorAll('.editBtn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const user = usersCache.find(x => x.id === id);
+            if (!user) {
+                show('Пользователь не найден');
+                return;
+            }
+            openModal(user);
+        });
+    });
+
+    show('Загружено пользователей: ' + data.length);
+}
+
+document.getElementById('filterBtn').onclick = loadUsers;
+document.getElementById('addInterestBtn').onclick = async () => {
+    const name = document.getElementById('newInterestName').value.trim();
+    if (!name) {
+        show('Введите название интереса');
+        return;
+    }
+
+    show('Добавляем интерес...');
+    const res = await fetch('/api/v1/interests', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({name})
+    });
+
+    show(await parseResponse(res));
+    document.getElementById('newInterestName').value = '';
+    await loadInterests();
+    await loadUsers();
+};
+
+document.getElementById('mCancelBtn').onclick = closeModal;
+document.getElementById('editModalBackdrop').addEventListener('click', (e) => {
+    if (e.target.id === 'editModalBackdrop') closeModal();
+});
+
+document.getElementById('mSaveBtn').onclick = async () => {
+    const id = document.getElementById('mUserId').value;
+    const name = document.getElementById('mName').value.trim();
+    const roleValue = document.getElementById('mRole').value;
+    const interestIds = Array.from(document.querySelectorAll('.mInterestCheck:checked')).map(o => o.value);
+
+    if (!id) {
+        show('Ошибка: не выбран пользователь');
+        return;
+    }
+
+    show('Сохраняем пользователя...');
+    const res = await fetch('/api/v1/admin/users/' + id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({name, role: roleValue, interestIds})
+    });
+
+    show(await parseResponse(res));
+    if (res.ok) {
+        closeModal();
+        await loadUsers();
+    }
+};
+
+loadInterests().then(loadUsers);
+</script>
+</body>
+</html>

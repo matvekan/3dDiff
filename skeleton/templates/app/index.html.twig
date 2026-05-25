@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>3dDiff Auth</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --panel: #ffffff;
+            --line: #d6dce2;
+            --text: #1f2a36;
+            --muted: #5f6b76;
+            --primary: #1f4e79;
+            --primary-hover: #173a5b;
+            --ok-bg: #e8f6ec;
+            --ok-text: #1c6b3a;
+            --err-bg: #fdeceb;
+            --err-text: #8a2e28;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: linear-gradient(180deg, #eef2f6 0%, #f8fafc 100%);
+            color: var(--text);
+            font: 16px/1.45 Georgia, "Times New Roman", serif;
+        }
+        .wrap { max-width: 980px; margin: 32px auto; padding: 0 16px; }
+        .header { margin-bottom: 18px; }
+        .header h1 { margin: 0 0 4px; font-size: 34px; }
+        .header p { margin: 0; color: var(--muted); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 14px;
+            box-shadow: 0 2px 5px rgba(16, 24, 40, 0.04);
+        }
+        .card h3 { margin: 0 0 10px; font-size: 20px; }
+        label { display: block; margin: 8px 0 4px; font-size: 14px; color: var(--muted); }
+        input {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #bcc7d2;
+            border-radius: 6px;
+            font: 15px Georgia, "Times New Roman", serif;
+            background: #fff;
+        }
+        button {
+            margin-top: 10px;
+            width: 100%;
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            font: 15px Georgia, "Times New Roman", serif;
+            cursor: pointer;
+        }
+        button:hover { background: var(--primary-hover); }
+        button:disabled { opacity: 0.7; cursor: progress; }
+        .status {
+            margin-top: 14px;
+            border-radius: 8px;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            white-space: pre-wrap;
+            min-height: 44px;
+        }
+        .status.ok { background: var(--ok-bg); color: var(--ok-text); border-color: #b9e3c5; }
+        .status.err { background: var(--err-bg); color: var(--err-text); border-color: #efc4c1; }
+    </style>
+</head>
+<body>
+<main class="wrap">
+    <section class="header">
+        <h1>Вход в систему</h1>
+        <p>Регистрация, авторизация и восстановление пароля.</p>
+    </section>
+
+    <section class="grid">
+        <form id="authForm" class="card">
+            <h3 id="formTitle">Авторизация</h3>
+
+            <div id="nameWrap" style="display:none;">
+                <label for="name">Имя</label>
+                <input id="name" name="name">
+            </div>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+
+            <div id="passwordWrap">
+                <label for="password">Пароль</label>
+                <input id="password" name="password" type="password" required>
+            </div>
+
+            <button id="submitBtn" type="submit">Войти</button>
+
+            <p style="margin:10px 0 0; color: var(--muted);">
+                <a href="#" id="toLogin">Вход</a> |
+                <a href="#" id="toRegister">Регистрация</a> |
+                <a href="#" id="toForgot">Забыли пароль?</a>
+            </p>
+        </form>
+    </section>
+
+    <section id="msg" class="status">Готово к работе.</section>
+</main>
+
+<script>
+const msg = document.getElementById('msg');
+const form = document.getElementById('authForm');
+const title = document.getElementById('formTitle');
+const submitBtn = document.getElementById('submitBtn');
+const nameWrap = document.getElementById('nameWrap');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const passwordWrap = document.getElementById('passwordWrap');
+const passwordInput = document.getElementById('password');
+
+let mode = 'login';
+
+function renderMessage(type, payload) {
+    msg.className = 'status ' + (type || '');
+    if (typeof payload === 'string') {
+        msg.textContent = payload;
+        return;
+    }
+    if (payload && typeof payload === 'object') {
+        msg.textContent = payload.message || payload.error || 'Операция выполнена.';
+        return;
+    }
+    msg.textContent = 'Операция выполнена.';
+}
+
+async function readBody(res) {
+    const text = await res.text();
+    if (!text) return null;
+    try {
+        return JSON.parse(text);
+    } catch (_) {
+        return text;
+    }
+}
+
+async function submitJson(url, payload, button, successFallback) {
+    try {
+        button.disabled = true;
+        button.textContent = 'Выполняется...';
+        renderMessage('', 'Отправка запроса...');
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+        const data = await readBody(res);
+        if (!res.ok) {
+            renderMessage('err', data || ('Ошибка: HTTP ' + res.status));
+            return {ok: false, data};
+        }
+        renderMessage('ok', data || successFallback);
+        return {ok: true, data};
+    } catch (e) {
+        renderMessage('err', 'Сетевая ошибка: ' + e.message);
+        return {ok: false, data: null};
+    } finally {
+        button.disabled = false;
+        if (mode === 'register') button.textContent = 'Зарегистрироваться';
+        if (mode === 'login') button.textContent = 'Войти';
+        if (mode === 'forgot') button.textContent = 'Отправить ссылку';
+    }
+}
+
+function setMode(nextMode) {
+    mode = nextMode;
+    if (mode === 'login') {
+        title.textContent = 'Авторизация';
+        submitBtn.textContent = 'Войти';
+        nameWrap.style.display = 'none';
+        passwordWrap.style.display = 'block';
+        nameInput.required = false;
+        passwordInput.required = true;
+    }
+    if (mode === 'register') {
+        title.textContent = 'Регистрация';
+        submitBtn.textContent = 'Зарегистрироваться';
+        nameWrap.style.display = 'block';
+        passwordWrap.style.display = 'block';
+        nameInput.required = true;
+        passwordInput.required = true;
+    }
+    if (mode === 'forgot') {
+        title.textContent = 'Восстановление пароля';
+        submitBtn.textContent = 'Отправить ссылку';
+        nameWrap.style.display = 'none';
+        passwordWrap.style.display = 'none';
+        nameInput.required = false;
+        passwordInput.required = false;
+    }
+}
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = Object.fromEntries(new FormData(form).entries());
+
+    if (mode === 'register') {
+        const result = await submitJson('/api/v1/auth/register', {
+            name: payload.name,
+            email: payload.email,
+            password: payload.password
+        }, submitBtn, 'Пользователь зарегистрирован. Теперь можно войти.');
+        if (result.ok) {
+            form.reset();
+            emailInput.value = payload.email || '';
+            setMode('login');
+        }
+        return;
+    }
+
+    if (mode === 'login') {
+        const result = await submitJson('/api/v1/auth/login', {
+            email: payload.email,
+            password: payload.password
+        }, submitBtn, 'Успешный вход.');
+        if (!result.ok || !result.data) return;
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('role', result.data.role);
+        location.href = result.data.role === 'ROLE_ADMIN' ? '/app/admin' : '/app/user';
+        return;
+    }
+
+    const result = await submitJson('/api/v1/auth/forgot-password', {
+        email: payload.email
+    }, submitBtn, 'Письмо отправлено (если аккаунт существует).');
+    if (result.ok) setMode('login');
+});
+
+document.getElementById('toLogin').addEventListener('click', (e) => { e.preventDefault(); setMode('login'); });
+document.getElementById('toRegister').addEventListener('click', (e) => { e.preventDefault(); setMode('register'); });
+document.getElementById('toForgot').addEventListener('click', (e) => { e.preventDefault(); setMode('forgot'); });
+
+setMode('login');
+</script>
+</body>
+</html>

@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace App\Domain\Repository;
 
 use App\Domain\Entity\Interest;
-use Symfony\Component\Uid\Uuid;
 
 interface InterestRepositoryInterface
 {
@@ -14,10 +13,12 @@ interface InterestRepositoryInterface
 
     public function remove(Interest $interest): void;
 
-    /**
-     * @param Uuid $userId
-     * @return array<Interest>
-     */
-    public function getByUserId(Uuid $userId): array;
+    public function findByName(string $name): Interest;
+
+    public function getById(string $id): Interest;
+
+    public function findByIds(array $ids): array;
+
+    public function findAllOrderedByName(): array;
 
 }

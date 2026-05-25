@@ -19,7 +19,7 @@ final class Email implements StringValueObject
         }
 
         if (!filter_var($trimmed, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException(\sprintf('Неверный формат email адреса: "%s".', $trimmed));
+            throw new InvalidArgumentException(\sprintf('Неверный формат email: "%s".', $trimmed));
         }
 
         $this->email = mb_strtolower($trimmed);

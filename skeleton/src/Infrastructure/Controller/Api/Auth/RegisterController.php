@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Controller\Api\Auth;
 
 use App\Application\Command\CommandBusInterface;
-use App\Application\Command\User\RegisterUserCommand;
+use App\Application\Command\Auth\RegisterUserCommand;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;

@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'users')]
+#[ORM\Table(name: 'users', uniqueConstraints: [new ORM\UniqueConstraint(name: 'uniq_users_email', columns: ['email'])])]
 #[UniqueEntity(fields: ['email'], message: 'Email already used.')]
 class User extends AbstractEntity implements UserInterface, \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
@@ -85,8 +85,8 @@ class User extends AbstractEntity implements UserInterface, \Symfony\Component\S
     {
         $roles = ['ROLE_USER'];
 
-        if (null !== $this->role && '' !== $this->role) {
-            $roles[] = $this->role;
+        if (null !== $this->role) {
+            $roles[] = $this->role->value;
         }
 
         return array_values(array_unique($roles));
@@ -106,7 +106,7 @@ class User extends AbstractEntity implements UserInterface, \Symfony\Component\S
 
     public function getUserIdentifier(): string
     {
-        if (null === $this->email || '' === $this->email) {
+        if (!isset($this->email)) {
             throw new \LogicException('User email must be set before authentication.');
         }
 
@@ -164,6 +164,6 @@ class User extends AbstractEntity implements UserInterface, \Symfony\Component\S
 
     public function getInterestIds(): array
     {
-        return $this->interest->getValues();
+        return $this->interest->map(static fn (Interest $interest) => (string) $interest->getId())->toArray();
     }
 }
