@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsMessageHandler]
 final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
@@ -24,6 +25,7 @@ final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
         private UserDtoFactory $userDtoFactory,
         private UserRepositoryInterface $userRepository,
         private InterestRepositoryInterface $interestRepository,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
@@ -56,6 +58,7 @@ final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
         }
 
         $this->userRepository->save($user);
+        $this->cache->invalidateTags(['users_list']);
 
         return $this->userDtoFactory->create($user)->jsonSerialize();
     }

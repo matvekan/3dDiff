@@ -36,7 +36,7 @@ final readonly class LoginCommandHandler implements CommandHandlerInterface
         }
 
         return [
-            'token' => $this->tokenService->create($user),
+            'token' => $this->tokenService->createForUser((string) $user->getId(), (string) $user->getRole()),
             'role' => $user->getRole(),
             'userId' => (string) $user->getId(),
         ];

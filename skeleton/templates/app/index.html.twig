@@ -130,6 +130,10 @@ function renderMessage(type, payload) {
         return;
     }
     if (payload && typeof payload === 'object') {
+        if (Array.isArray(payload.violations) && payload.violations.length > 0) {
+            msg.textContent = payload.violations.map(v => `${v.field}: ${v.message}`).join('; ');
+            return;
+        }
         msg.textContent = payload.message || payload.error || 'Операция выполнена.';
         return;
     }

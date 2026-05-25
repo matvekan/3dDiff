@@ -11,6 +11,7 @@ use App\Application\Service\AuthenticatedUserResolver;
 use App\Domain\Repository\InterestRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsMessageHandler]
 final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerInterface
@@ -20,6 +21,7 @@ final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerIn
         private InterestRepositoryInterface $interestRepository,
         private UserRepositoryInterface $userRepository,
         private UserDtoFactory $userDtoFactory,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
@@ -36,6 +38,7 @@ final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerIn
         }
 
         $this->userRepository->save($user);
+        $this->cache->invalidateTags(['users_list']);
 
         return $this->userDtoFactory->create($user)->jsonSerialize();
     }

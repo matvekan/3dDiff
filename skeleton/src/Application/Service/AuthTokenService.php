@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Service;
 
-use App\Domain\Entity\User;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 final readonly class AuthTokenService
 {
@@ -14,45 +15,32 @@ final readonly class AuthTokenService
     ) {
     }
 
-    public function create(User $user): string
+    public function createForUser(string $userId, string $role): string
     {
         $payload = [
-            'uid' => (string) $user->getId(),
+            'uid' => $userId,
+            'role' => $role,
+            'iat' => time(),
             'exp' => time() + $this->ttlSeconds,
         ];
 
-        $json = json_encode($payload, JSON_THROW_ON_ERROR);
-        $encoded = rtrim(strtr(base64_encode($json), '+/', '-_'), '=');
-        $signature = hash_hmac('sha256', $encoded, $this->appSecret);
-
-        return $encoded.'.'.$signature;
+        return JWT::encode($payload, $this->appSecret, 'HS256');
     }
 
     public function parse(string $token): ?array
     {
-        $parts = explode('.', $token, 2);
-        if (2 !== count($parts)) {
+        if ('' === trim($token)) {
             return null;
         }
 
-        [$encoded, $signature] = $parts;
-        $expected = hash_hmac('sha256', $encoded, $this->appSecret);
-
-        if (!hash_equals($expected, $signature)) {
+        try {
+            $decoded = JWT::decode($token, new Key($this->appSecret, 'HS256'));
+        } catch (\Throwable) {
             return null;
         }
 
-        $decoded = base64_decode(strtr($encoded, '-_', '+/'), true);
-        if (false === $decoded) {
-            return null;
-        }
-
-        $payload = json_decode($decoded, true);
+        $payload = (array) $decoded;
         if (!is_array($payload) || !isset($payload['uid'], $payload['exp'])) {
-            return null;
-        }
-
-        if ((int) $payload['exp'] < time()) {
             return null;
         }
 

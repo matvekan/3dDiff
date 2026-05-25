@@ -11,6 +11,7 @@ use App\Domain\Repository\InterestRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsMessageHandler]
 final readonly class DeleteInterestCommandHandler implements CommandHandlerInterface
@@ -18,6 +19,7 @@ final readonly class DeleteInterestCommandHandler implements CommandHandlerInter
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
         private AuthenticatedUserResolver $userResolver,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
@@ -35,6 +37,7 @@ final readonly class DeleteInterestCommandHandler implements CommandHandlerInter
         }
 
         $this->interestRepository->remove($interest);
+        $this->cache->invalidateTags(['users_list']);
 
         return ['message' => 'Interest deleted'];
     }

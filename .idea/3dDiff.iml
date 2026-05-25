@@ -83,6 +83,7 @@
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/twig-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/symfony/twig-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/skeleton/vendor/firebase/php-jwt" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -102,6 +102,10 @@ function show(d) {
         return;
     }
     if (d && typeof d === 'object') {
+        if (Array.isArray(d.violations) && d.violations.length > 0) {
+            msg.textContent = d.violations.map(v => `${v.field}: ${v.message}`).join('; ');
+            return;
+        }
         msg.textContent = d.message || d.error || 'Готово';
         return;
     }

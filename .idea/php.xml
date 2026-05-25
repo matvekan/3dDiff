@@ -91,6 +91,7 @@
       <path value="$PROJECT_DIR$/skeleton/vendor/symfony/mailer" />
       <path value="$PROJECT_DIR$/skeleton/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/skeleton/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/skeleton/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />

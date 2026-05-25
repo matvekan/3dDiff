@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsMessageHandler]
 final readonly class RegisterUserCommandHandler implements CommandHandlerInterface
@@ -22,6 +23,7 @@ final readonly class RegisterUserCommandHandler implements CommandHandlerInterfa
     public function __construct(
         private UserRepositoryInterface     $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
+        private TagAwareCacheInterface      $cache,
     ) {
     }
 
@@ -41,6 +43,7 @@ final readonly class RegisterUserCommandHandler implements CommandHandlerInterfa
         $user->setPassword($this->passwordHasher->hashPassword($user, $command->password));
 
         $this->userRepository->save($user);
+        $this->cache->invalidateTags(['users_list']);
 
         return [
             'id' => (string) $user->getId(),

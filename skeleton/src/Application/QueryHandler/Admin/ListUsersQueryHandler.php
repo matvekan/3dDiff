@@ -11,7 +11,8 @@ use App\Application\Service\AuthenticatedUserResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Component\Cache\CacheItem;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 #[AsMessageHandler]
@@ -21,7 +22,7 @@ final readonly class ListUsersQueryHandler implements QueryHandlerInterface
         private AuthenticatedUserResolver $userResolver,
         private EntityManagerInterface $entityManager,
         private UserDtoFactory $userDtoFactory,
-        private CacheInterface $cache,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
@@ -36,6 +37,9 @@ final readonly class ListUsersQueryHandler implements QueryHandlerInterface
 
         return $this->cache->get($cacheKey, function (ItemInterface $item) use ($query) {
             $item->expiresAfter(60);
+            if ($item instanceof CacheItem) {
+                $item->tag('users_list');
+            }
 
             $qb = $this->entityManager->createQueryBuilder()
                 ->select('u', 'i')

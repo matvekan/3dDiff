@@ -12,6 +12,7 @@ use App\Domain\Repository\InterestRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[AsMessageHandler]
 final readonly class CreateInterestCommandHandler implements CommandHandlerInterface
@@ -19,6 +20,7 @@ final readonly class CreateInterestCommandHandler implements CommandHandlerInter
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
         private AuthenticatedUserResolver $userResolver,
+        private TagAwareCacheInterface $cache,
     )
     {
     }
@@ -38,6 +40,7 @@ final readonly class CreateInterestCommandHandler implements CommandHandlerInter
         $interest = new Interest();
         $interest->setName($name);
         $this->interestRepository->save($interest);
+        $this->cache->invalidateTags(['users_list']);
 
         return ['id' => (string) $interest->getId(), 'name' => $interest->getName()];
     }
