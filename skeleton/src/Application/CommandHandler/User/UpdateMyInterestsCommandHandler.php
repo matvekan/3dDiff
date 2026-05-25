@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\User;
@@ -7,7 +6,6 @@ namespace App\Application\CommandHandler\User;
 use App\Application\Command\CommandHandlerInterface;
 use App\Application\Command\User\UpdateMyInterestsCommand;
 use App\Application\Dto\Factory\UserDtoFactory;
-use App\Application\Service\AuthenticatedUserResolver;
 use App\Domain\Repository\InterestRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -17,7 +15,6 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private AuthenticatedUserResolver $userResolver,
         private InterestRepositoryInterface $interestRepository,
         private UserRepositoryInterface $userRepository,
         private UserDtoFactory $userDtoFactory,
@@ -27,7 +24,7 @@ final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerIn
 
     public function __invoke(UpdateMyInterestsCommand $command): array
     {
-        $user = $this->userResolver->fromToken($command->token);
+        $user = $this->userRepository->getById($command->userId);
 
         foreach ($user->getInterest()->toArray() as $interest) {
             $user->removeInterest($interest);

@@ -90,7 +90,7 @@ async function loadProfile() {
 }
 
 async function loadInterests() {
-    const res = await fetch('/api/v1/interests');
+    const res = await fetch('/api/v1/interests', {headers: authHeaders});
     const list = await res.json();
     interestsEl.innerHTML = '';
     list.forEach(i => {

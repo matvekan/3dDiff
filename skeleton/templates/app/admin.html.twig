@@ -130,7 +130,15 @@ function esc(value) {
 }
 
 async function loadInterests() {
-    const res = await fetch('/api/v1/interests');
+    const res = await fetch('/api/v1/interests', {
+        headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (!res.ok) {
+        show('Ошибка загрузки интересов');
+        return;
+    }
+
     allInterests = await res.json();
     renderInterestManager();
 }

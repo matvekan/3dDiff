@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application\Command\Interest;
@@ -13,6 +12,6 @@ final readonly class CreateInterestCommand implements CommandInterface
         #[Assert\NotBlank]
         #[Assert\Length(min: 2, max: 255)]
         public string $name,
-        public string $token = '',
+        public string $adminId = '',
     ) {}
 }

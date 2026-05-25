@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application\QueryHandler\Admin;
@@ -7,7 +6,7 @@ namespace App\Application\QueryHandler\Admin;
 use App\Application\Dto\Factory\UserDtoFactory;
 use App\Application\Query\Admin\ListUsersQuery;
 use App\Application\Query\QueryHandlerInterface;
-use App\Application\Service\AuthenticatedUserResolver;
+use App\Domain\Repository\UserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -19,7 +18,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 final readonly class ListUsersQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        private AuthenticatedUserResolver $userResolver,
+        private UserRepositoryInterface $userRepository,
         private EntityManagerInterface $entityManager,
         private UserDtoFactory $userDtoFactory,
         private TagAwareCacheInterface $cache,
@@ -28,7 +27,7 @@ final readonly class ListUsersQueryHandler implements QueryHandlerInterface
 
     public function __invoke(ListUsersQuery $query): array
     {
-        $admin = $this->userResolver->fromToken($query->token);
+        $admin = $this->userRepository->getById($query->adminId);
         if ('ROLE_ADMIN' !== $admin->getRole()) {
             throw new AccessDeniedHttpException('Forbidden');
         }

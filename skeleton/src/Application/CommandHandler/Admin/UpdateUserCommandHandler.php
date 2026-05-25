@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\Admin;
@@ -7,7 +6,6 @@ namespace App\Application\CommandHandler\Admin;
 use App\Application\Command\Admin\UpdateUserCommand;
 use App\Application\Command\CommandHandlerInterface;
 use App\Application\Dto\Factory\UserDtoFactory;
-use App\Application\Service\AuthenticatedUserResolver;
 use App\Domain\Repository\InterestRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\ValueObject\Name;
@@ -21,7 +19,6 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private AuthenticatedUserResolver $userResolver,
         private UserDtoFactory $userDtoFactory,
         private UserRepositoryInterface $userRepository,
         private InterestRepositoryInterface $interestRepository,
@@ -31,7 +28,7 @@ final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
 
     public function __invoke(UpdateUserCommand $command): array
     {
-        $admin = $this->userResolver->fromToken($command->token);
+        $admin = $this->userRepository->getById($command->adminId);
         if ('ROLE_ADMIN' !== $admin->getRole()) {
             throw new AccessDeniedHttpException('Forbidden');
         }

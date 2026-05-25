@@ -8,7 +8,7 @@ use App\Application\Query\QueryInterface;
 
 final readonly class GetMyProfileQuery implements QueryInterface
 {
-    public function __construct(public string $token)
+    public function __construct(public string $userId)
     {
     }
 }

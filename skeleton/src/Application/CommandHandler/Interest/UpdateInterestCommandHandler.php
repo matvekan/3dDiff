@@ -1,13 +1,12 @@
 <?php
-
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\Interest;
 
 use App\Application\Command\CommandHandlerInterface;
 use App\Application\Command\Interest\UpdateInterestCommand;
-use App\Application\Service\AuthenticatedUserResolver;
 use App\Domain\Repository\InterestRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,14 +18,13 @@ final readonly class UpdateInterestCommandHandler implements CommandHandlerInter
 {
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
-        private AuthenticatedUserResolver $userResolver,
+        private UserRepositoryInterface $userRepository,
         private TagAwareCacheInterface $cache,
-    ) {
-    }
+    ) {}
 
     public function __invoke(UpdateInterestCommand $command): array
     {
-        $admin = $this->userResolver->fromToken($command->token);
+        $admin = $this->userRepository->getById($command->adminId);
         if ('ROLE_ADMIN' !== $admin->getRole()) {
             throw new AccessDeniedHttpException('Forbidden');
         }
