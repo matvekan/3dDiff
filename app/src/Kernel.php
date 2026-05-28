@@ -6,6 +6,7 @@ namespace App;
 
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Name;
+use App\Domain\ValueObject\Token;
 use Doctrine\DBAL\Types\Exception\TypesException;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -18,7 +19,8 @@ class Kernel extends BaseKernel
 
     private const array DOCTRINE_VALUE_OBJECTS = [
         'name' => Name::class,
-        'email' => Email::class
+        'email' => Email::class,
+        'token' => Token::class,
     ];
 
     /**

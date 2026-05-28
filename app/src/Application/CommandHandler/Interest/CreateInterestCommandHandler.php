@@ -7,10 +7,6 @@ use App\Application\Command\CommandHandlerInterface;
 use App\Application\Command\Interest\CreateInterestCommand;
 use App\Domain\Entity\Interest;
 use App\Domain\Repository\InterestRepositoryInterface;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Domain\ValueObject\Role;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -19,27 +15,14 @@ final readonly class CreateInterestCommandHandler implements CommandHandlerInter
 {
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
-        private UserRepositoryInterface $userRepository,
         private TagAwareCacheInterface $cache,
     ) {}
 
-    public function __invoke(CreateInterestCommand $command): array
+    public function __invoke(CreateInterestCommand $command): void
     {
-        $admin = $this->userRepository->getById($command->adminId);
-        if (Role::ADMIN->value !== $admin->getRole()) {
-            throw new AccessDeniedHttpException('Forbidden');
-        }
-
-        $name = trim($command->name);
-        if ('' === $name) {
-            throw new BadRequestHttpException('name is required');
-        }
-
         $interest = new Interest();
-        $interest->setName($name);
+        $interest->setName($command->name);
         $this->interestRepository->save($interest);
         $this->cache->invalidateTags(['users_list']);
-
-        return ['id' => (string) $interest->getId(), 'name' => $interest->getName()];
     }
 }

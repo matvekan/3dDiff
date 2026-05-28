@@ -25,12 +25,8 @@ final readonly class ResetPasswordCommandHandler implements CommandHandlerInterf
     ) {
     }
 
-    public function __invoke(ResetPasswordCommand $command): array
+    public function __invoke(ResetPasswordCommand $command): void
     {
-        if ('' === trim($command->token) || '' === trim($command->newPassword)) {
-            throw new BadRequestHttpException('Token and newPassword are required');
-        }
-
         $reset = $this->passwordResetRepository->findValidByToken($command->token);
         if (null === $reset) {
             throw new BadRequestHttpException('Invalid or expired token');
@@ -47,7 +43,5 @@ final readonly class ResetPasswordCommandHandler implements CommandHandlerInterf
 
         $this->userRepository->save($user);
         $this->passwordResetRepository->save($reset);
-
-        return ['message' => 'Password updated'];
     }
 }

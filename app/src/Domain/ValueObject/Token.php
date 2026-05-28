@@ -14,6 +14,11 @@ final class Token implements StringValueObject
         return new self($value);
     }
 
+    public function __toString(): string
+    {
+        return $this->token;
+    }
+
     public function toValue(): string
     {
         return $this->token;

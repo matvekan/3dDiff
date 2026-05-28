@@ -12,14 +12,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/api/v1/me', name: 'user.me.profile', methods: ['GET'])]
-final class GetMyProfileController
+class GetMyProfileController
 {
-    public function __construct(
-        private QueryBusInterface $queryBus,
-    ){}
+    public function __construct(private QueryBusInterface $queryBus){}
 
     public function __invoke(#[CurrentUser] User $user): JsonResponse
     {
-        return new JsonResponse($this->queryBus->execute(new GetMyProfileQuery(((string)$user->getId()))));
+        return new JsonResponse($this->queryBus->execute(new GetMyProfileQuery((string) $user->getId())));
     }
 }

@@ -12,7 +12,6 @@ final readonly class CreateInterestCommand implements CommandInterface
         #[Assert\NotBlank]
         #[Assert\Length(min: 2, max: 255)]
         public string $name,
-        #[Assert\Uuid]
-        public string $adminId = '',
-    ) {}
+    )
+    {}
 }

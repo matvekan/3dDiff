@@ -10,8 +10,7 @@ final readonly class DeleteInterestCommand implements CommandInterface
 {
     public function __construct(
         #[Assert\Uuid]
-        public string $adminId = '',
-        #[Assert\Uuid]
         public string $interestId = '',
-    ) {}
+    )
+    {}
 }

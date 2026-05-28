@@ -4,6 +4,7 @@ namespace App\Infrastructure\Repository;
 
 use App\Domain\Entity\PasswordReset;
 use App\Domain\Repository\PasswordResetRepositoryInterface;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,7 +32,7 @@ class PasswordResetRepository extends ServiceEntityRepository implements Passwor
             ->andWhere('pr.usedAt IS NULL')
             ->andWhere('pr.expiresAt > :now')
             ->setParameter('token', $token)
-            ->setParameter('now', new \DateTimeImmutable())
+            ->setParameter('now', new DateTimeImmutable())
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

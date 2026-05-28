@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Entity\Interest;
 use App\Domain\Entity\User;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\ValueObject\Email;
@@ -74,9 +73,30 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         $this->getEntityManager()->flush();
     }
 
-    public function getByInterest(Interest $interest): array
+    public function findByFilters(string $name, string $email, string $role, string $interest): array
     {
-        return array(1, 2);
+        $qb = $this->createQueryBuilder('u')
+            ->select('u', 'i')
+            ->leftJoin('u.interest', 'i');
+
+        if ('' !== $name) {
+            $qb->andWhere('LOWER(u.name) LIKE :name')
+                ->setParameter('name', '%'.mb_strtolower($name).'%');
+        }
+        if ('' !== $email) {
+            $qb->andWhere('LOWER(u.email) LIKE :email')
+                ->setParameter('email', '%'.mb_strtolower($email).'%');
+        }
+        if ('' !== $role) {
+            $qb->andWhere('u.role = :role')
+                ->setParameter('role', $role);
+        }
+        if ('' !== $interest) {
+            $qb->andWhere('LOWER(i.name) LIKE :interest')
+                ->setParameter('interest', '%'.mb_strtolower($interest).'%');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface

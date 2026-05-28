@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Infrastructure\Controller\Api\User;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/api/v1/me/interests', name: 'user.me.interests.update', methods: ['PUT'])]
-final class UpdateMyInterestsController
+class UpdateMyInterestsController
 {
     public function __construct(private CommandBusInterface $commandBus){}
 

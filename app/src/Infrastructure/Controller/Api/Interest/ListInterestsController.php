@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/v1/interests', name: 'interest.list', methods: ['GET'])]
-final class ListInterestsController
+class ListInterestsController
 {
     public function __construct(private QueryBusInterface $queryBus){}
 

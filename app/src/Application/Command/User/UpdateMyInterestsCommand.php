@@ -13,7 +13,8 @@ final readonly class UpdateMyInterestsCommand implements CommandInterface
         #[Assert\Type('array')]
         #[Assert\All([new Assert\Uuid()])]
         public array $interestIds,
+        #[Assert\Uuid]
         public string $userId = '',
-    ) {
-    }
+    )
+    {}
 }

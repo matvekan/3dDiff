@@ -4,7 +4,6 @@ namespace App\Infrastructure\Bus;
 
 use App\Application\Command\CommandBusInterface;
 use App\Application\Command\CommandInterface;
-use App\Application\Query\QueryBusInterface;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 

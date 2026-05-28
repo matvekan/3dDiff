@@ -25,10 +25,10 @@ final readonly class RegisterUserCommandHandler implements CommandHandlerInterfa
         private UserRepositoryInterface     $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
         private TagAwareCacheInterface      $cache,
-    ) {
-    }
+    )
+    {}
 
-    public function __invoke(RegisterUserCommand $command): array
+    public function __invoke(RegisterUserCommand $command): void
     {
         try {
             $this->userRepository->getByEmail($command->email);
@@ -45,11 +45,5 @@ final readonly class RegisterUserCommandHandler implements CommandHandlerInterfa
 
         $this->userRepository->save($user);
         $this->cache->invalidateTags(['users_list']);
-
-        return [
-            'id' => (string) $user->getId(),
-            'email' => $user->getEmail()->toValue(),
-            'message' => 'User registered',
-        ];
     }
 }

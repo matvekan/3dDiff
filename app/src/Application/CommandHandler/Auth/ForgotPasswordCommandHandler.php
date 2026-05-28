@@ -24,15 +24,15 @@ final readonly class ForgotPasswordCommandHandler implements CommandHandlerInter
         private UserRepositoryInterface $userRepository,
         private PasswordResetRepositoryInterface $passwordResetRepository,
         private PasswordResetMailer $passwordResetMailer,
-    ) {
-    }
+    )
+    {}
 
-    public function __invoke(ForgotPasswordCommand $command): array
+    public function __invoke(ForgotPasswordCommand $command): void
     {
         try {
             $this->userRepository->getByEmail($command->email);
         } catch (UserNotFoundException) {
-            return ['message' => 'If account exists, reset instructions were sent to email'];
+            return;
         }
 
         $token = bin2hex(random_bytes(32));
@@ -44,7 +44,5 @@ final readonly class ForgotPasswordCommandHandler implements CommandHandlerInter
 
         $this->passwordResetRepository->save($passwordReset);
         $this->passwordResetMailer->sendResetLink($command->email, $token);
-
-        return ['message' => 'If account exists, reset instructions were sent to email'];
     }
 }

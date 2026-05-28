@@ -176,6 +176,8 @@
       <path value="$PROJECT_DIR$/app/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/app/vendor/psr/log" />
       <path value="$PROJECT_DIR$/app/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/app/vendor/symfony/doctrine-messenger" />
+      <path value="$PROJECT_DIR$/app/vendor/symfony/redis-messenger" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />

@@ -5,7 +5,6 @@ namespace App\Application\CommandHandler\User;
 
 use App\Application\Command\CommandHandlerInterface;
 use App\Application\Command\User\UpdateMyInterestsCommand;
-use App\Application\Dto\Factory\UserDtoFactory;
 use App\Domain\Repository\InterestRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -17,12 +16,11 @@ final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerIn
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
         private UserRepositoryInterface $userRepository,
-        private UserDtoFactory $userDtoFactory,
         private TagAwareCacheInterface $cache,
     ) {
     }
 
-    public function __invoke(UpdateMyInterestsCommand $command): array
+    public function __invoke(UpdateMyInterestsCommand $command): void
     {
         $user = $this->userRepository->getById($command->userId);
 
@@ -36,7 +34,5 @@ final readonly class UpdateMyInterestsCommandHandler implements CommandHandlerIn
 
         $this->userRepository->save($user);
         $this->cache->invalidateTags(['users_list']);
-
-        return $this->userDtoFactory->create($user)->jsonSerialize();
     }
 }

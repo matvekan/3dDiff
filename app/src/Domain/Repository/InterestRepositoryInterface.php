@@ -13,8 +13,6 @@ interface InterestRepositoryInterface
 
     public function remove(Interest $interest): void;
 
-    public function findByName(string $name): Interest;
-
     public function getById(string $id): Interest;
 
     public function findByIds(array $ids): array;

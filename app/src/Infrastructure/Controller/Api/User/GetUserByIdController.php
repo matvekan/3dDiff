@@ -12,11 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/v1/users/{id}', name: 'api_users_get_by_id', methods: ['GET'])]
-final class GetUserByIdController
+class GetUserByIdController
 {
-    public function __construct(private readonly QueryBusInterface $queryBus)
-    {
-    }
+    public function __construct(private QueryBusInterface $queryBus){} 
 
     public function __invoke(string $id): JsonResponse
     {

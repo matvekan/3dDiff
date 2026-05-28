@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/v1/auth/reset-password', name: 'auth.reset_password', methods: ['POST'])]
-final class ResetPasswordController
+class ResetPasswordController
 {
     public function __construct(private CommandBusInterface $commandBus){}
 

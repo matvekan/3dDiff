@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class PasswordReset extends AbstractEntity
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "token", length: 255)]
     private Token $token;
 
     #[ORM\Column(type: "email")]

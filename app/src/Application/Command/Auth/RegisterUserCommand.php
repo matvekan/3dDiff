@@ -19,6 +19,6 @@ final readonly class RegisterUserCommand implements CommandInterface
         #[Assert\NotBlank]
         #[Assert\Length(min: 2, max: 50)]
         public string $name,
-    ) {
-    }
+    )
+    {}
 }

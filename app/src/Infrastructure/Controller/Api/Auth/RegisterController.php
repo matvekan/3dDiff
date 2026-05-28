@@ -16,13 +16,11 @@ class RegisterController
 
     public function __construct(private CommandBusInterface $commandBus){}
 
-    public function __invoke(
-        #[MapRequestPayload]
-        RegisterUserCommand $command
-    ): JsonResponse
+    public function __invoke(#[MapRequestPayload] RegisterUserCommand $command): JsonResponse
     {
-        return new JsonResponse(($this->commandBus->execute($command)));
+        $this->commandBus->execute($command);
 
+        return new JsonResponse(null, 201);
     }
 
 }

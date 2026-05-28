@@ -86,6 +86,8 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/twig/twig" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/yokai/doctrine-value-object" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/doctrine-messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/redis-messenger" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

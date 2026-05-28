@@ -13,8 +13,7 @@ final readonly class UpdateInterestCommand implements CommandInterface
         #[Assert\Length(min: 2, max: 255)]
         public string $name,
         #[Assert\Uuid]
-        public string $adminId = '',
-        #[Assert\Uuid]
         public string $interestId = '',
-    ) {}
+    )
+    {}
 }

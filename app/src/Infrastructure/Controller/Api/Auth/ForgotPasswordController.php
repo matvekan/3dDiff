@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/v1/auth/forgot-password', name: 'auth.forgot_password', methods: ['POST'])]
-final class ForgotPasswordController
+class ForgotPasswordController
 {
     public function __construct(private CommandBusInterface $commandBus){}
 

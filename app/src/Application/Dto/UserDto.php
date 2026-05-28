@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Application\Dto;
 
-use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\Name;
-use App\Domain\ValueObject\Role;
 use DateTimeImmutable;
 use JsonSerializable;
 

@@ -15,7 +15,7 @@ final class Name implements StringValueObject
         $trimmed = trim($name);
 
         if (mb_strlen($trimmed) < 2 || mb_strlen($trimmed) > 50) {
-            throw new InvalidArgumentException('Имя слишком короткое или слишком длинное.');
+            throw new InvalidArgumentException('The name is too short or too long.');
         }
 
         $this->name = $trimmed;
