@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace App\Domain\Repository;
 
 use App\Domain\Entity\Interest;
@@ -17,6 +16,7 @@ interface InterestRepositoryInterface
 
     /**
      * @param array<string> $ids
+     *
      * @return array<Interest>
      */
     public function findByIds(array $ids): array;
@@ -25,5 +25,4 @@ interface InterestRepositoryInterface
      * @return array<Interest>
      */
     public function findAllOrderedByName(): array;
-
 }

@@ -13,7 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/v1/interests', name: 'interest.create', methods: ['POST'])]
 class CreateInterestController
 {
-    public function __construct(private CommandBusInterface $commandBus){}
+    public function __construct(private CommandBusInterface $commandBus)
+    {
+    }
 
     public function __invoke(#[MapRequestPayload] CreateInterestCommand $command): JsonResponse
     {

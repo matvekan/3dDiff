@@ -12,7 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/v1/interests/{id}', name: 'interest.delete', methods: ['DELETE'])]
 class DeleteInterestController
 {
-    public function __construct(private CommandBusInterface $commandBus) {}
+    public function __construct(private CommandBusInterface $commandBus)
+    {
+    }
 
     public function __invoke(string $id): JsonResponse
     {

@@ -13,7 +13,7 @@ final class Email implements StringValueObject
     {
         $trimmed = trim($this->email);
 
-        if ($trimmed === '') {
+        if ('' === $trimmed) {
             throw new InvalidArgumentException('Email не может быть пустым.');
         }
 
@@ -26,7 +26,7 @@ final class Email implements StringValueObject
 
     public function toValue(): string
     {
-        return (string)$this;
+        return (string) $this;
     }
 
     public function __toString(): string
@@ -38,5 +38,4 @@ final class Email implements StringValueObject
     {
         return new self($value);
     }
-
 }

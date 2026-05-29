@@ -11,7 +11,7 @@ final readonly class GetMyProfileQuery implements QueryInterface
 {
     public function __construct(
         #[Assert\Uuid]
-        public string $userId
-    )
-    {}
+        public string $userId,
+    ) {
+    }
 }

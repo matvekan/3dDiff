@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Infrastructure\Security;
 
 use App\Domain\Entity\User;
@@ -13,8 +14,7 @@ final class JwtEventSubscriber
     public function onJWTCreated(JWTCreatedEvent $event): void
     {
         $user = $event->getUser();
-        if (!$user instanceof User)
-        {
+        if (!$user instanceof User) {
             return;
         }
 
@@ -27,14 +27,13 @@ final class JwtEventSubscriber
     public function onAuthenticationSuccess(AuthenticationSuccessEvent $event): void
     {
         $user = $event->getUser();
-        if (!$user instanceof User)
-        {
+        if (!$user instanceof User) {
             return;
         }
 
-    $data = $event->getData();
-    $data['userId'] = (string) $user->getId();
-    $data['role'] = $user->getRole();
-    $event->setData($data);
+        $data = $event->getData();
+        $data['userId'] = (string) $user->getId();
+        $data['role'] = $user->getRole();
+        $event->setData($data);
     }
 }

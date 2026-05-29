@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\Interest;
@@ -16,7 +17,8 @@ final readonly class UpdateInterestCommandHandler implements CommandHandlerInter
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
         private TagAwareCacheInterface $cache,
-    ) {}
+    ) {
+    }
 
     public function __invoke(UpdateInterestCommand $command): void
     {

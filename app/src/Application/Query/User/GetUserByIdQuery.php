@@ -12,5 +12,6 @@ final readonly class GetUserByIdQuery implements QueryInterface
     public function __construct(
         #[Assert\Uuid]
         public string $id,
-    ) {}
+    ) {
+    }
 }

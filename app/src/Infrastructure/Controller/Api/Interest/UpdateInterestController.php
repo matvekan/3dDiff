@@ -13,7 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/v1/interests/{id}', name: 'interest.update', methods: ['PUT'])]
 class UpdateInterestController
 {
-    public function __construct(private CommandBusInterface $commandBus) {}
+    public function __construct(private CommandBusInterface $commandBus)
+    {
+    }
 
     public function __invoke(string $id, #[MapRequestPayload] UpdateInterestCommand $command): JsonResponse
     {

@@ -18,7 +18,6 @@ final readonly class ListInterestsQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * @param ListInterestsQuery $query
      * @return array<mixed>
      */
     public function __invoke(ListInterestsQuery $query): array

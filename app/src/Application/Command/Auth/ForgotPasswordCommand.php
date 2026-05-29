@@ -13,6 +13,6 @@ final readonly class ForgotPasswordCommand implements CommandInterface
         #[Assert\NotBlank]
         #[Assert\Email]
         public string $email,
-    )
-    {}
+    ) {
+    }
 }

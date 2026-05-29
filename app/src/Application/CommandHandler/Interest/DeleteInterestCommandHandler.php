@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\Interest;
@@ -16,7 +17,8 @@ final readonly class DeleteInterestCommandHandler implements CommandHandlerInter
     public function __construct(
         private InterestRepositoryInterface $interestRepository,
         private TagAwareCacheInterface $cache,
-    ) {}
+    ) {
+    }
 
     public function __invoke(DeleteInterestCommand $command): void
     {

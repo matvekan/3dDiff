@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Command\Interest;
@@ -14,6 +15,6 @@ final readonly class UpdateInterestCommand implements CommandInterface
         public string $name,
         #[Assert\Uuid]
         public string $interestId = '',
-    )
-    {}
+    ) {
+    }
 }

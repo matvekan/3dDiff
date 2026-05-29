@@ -18,7 +18,7 @@ class UserDtoFactory
         }
 
         return new UserDto(
-            (string)$user->getId(),
+            (string) $user->getId(),
             $user->getEmail()->toValue(),
             $user->getName()->toValue(),
             $user->getRole(),
@@ -29,11 +29,11 @@ class UserDtoFactory
 
     /**
      * @param array<User> $users
+     *
      * @return array<UserDto>
      */
     public function createFromArray(array $users): array
     {
-        return array_map(fn(User $user) => $this->create($user), $users);
+        return array_map(fn (User $user) => $this->create($user), $users);
     }
-
 }

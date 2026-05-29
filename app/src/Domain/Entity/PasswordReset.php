@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace App\Domain\Entity;
 
 use App\Domain\ValueObject\Email;
@@ -12,10 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class PasswordReset extends AbstractEntity
 {
-    #[ORM\Column(type: "token", length: 255)]
+    #[ORM\Column(type: 'token', length: 255)]
     private Token $token;
 
-    #[ORM\Column(type: "email")]
+    #[ORM\Column(type: 'email')]
     private Email $email;
 
     #[ORM\Column]
@@ -46,7 +45,7 @@ class PasswordReset extends AbstractEntity
 
     public function setEmail(Email $email): static
     {
-        $this->email=$email;
+        $this->email = $email;
 
         return $this;
     }
@@ -86,5 +85,4 @@ class PasswordReset extends AbstractEntity
 
         return $this;
     }
-
 }

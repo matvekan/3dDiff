@@ -13,7 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/v1/admin/users', name: 'admin.users.list', methods: ['GET'])]
 readonly class ListUsersController
 {
-    public function __construct(private QueryBusInterface $queryBus){}
+    public function __construct(private QueryBusInterface $queryBus)
+    {
+    }
 
     public function __invoke(#[MapQueryString] ListUsersQuery $query): JsonResponse
     {

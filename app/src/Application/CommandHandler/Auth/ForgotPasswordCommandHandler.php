@@ -13,8 +13,6 @@ use App\Domain\Repository\PasswordResetRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\ValueObject\Email;
 use App\Domain\ValueObject\Token;
-use DateInterval;
-use DateTimeImmutable;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
@@ -24,8 +22,9 @@ final readonly class ForgotPasswordCommandHandler implements CommandHandlerInter
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private PasswordResetRepositoryInterface $passwordResetRepository,
-        private CommandBusInterface $commandBus    )
-    {}
+        private CommandBusInterface $commandBus)
+    {
+    }
 
     public function __invoke(ForgotPasswordCommand $command): void
     {
@@ -39,9 +38,10 @@ final readonly class ForgotPasswordCommandHandler implements CommandHandlerInter
         $passwordReset = new PasswordReset()
             ->setEmail(new Email($command->email))
             ->setToken(new Token($token))
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setExpiresAt(new DateTimeImmutable()->add(new DateInterval('PT1H')));
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setExpiresAt(new \DateTimeImmutable()->add(new \DateInterval('PT1H')));
 
         $this->passwordResetRepository->save($passwordReset);
-        $this->commandBus->execute(new SendPasswordResetEmailCommand($command->email, $token));    }
+        $this->commandBus->execute(new SendPasswordResetEmailCommand($command->email, $token));
+    }
 }

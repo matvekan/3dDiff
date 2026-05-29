@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\Command\Interest;
@@ -11,6 +12,6 @@ final readonly class DeleteInterestCommand implements CommandInterface
     public function __construct(
         #[Assert\Uuid]
         public string $interestId = '',
-    )
-    {}
+    ) {
+    }
 }

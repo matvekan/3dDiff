@@ -14,7 +14,9 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 #[Route('/api/v1/me', name: 'user.me.profile', methods: ['GET'])]
 class GetMyProfileController
 {
-    public function __construct(private QueryBusInterface $queryBus){}
+    public function __construct(private QueryBusInterface $queryBus)
+    {
+    }
 
     public function __invoke(#[CurrentUser] User $user): JsonResponse
     {

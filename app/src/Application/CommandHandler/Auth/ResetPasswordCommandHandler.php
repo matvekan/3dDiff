@@ -8,7 +8,6 @@ use App\Application\Command\Auth\ResetPasswordCommand;
 use App\Application\Command\CommandHandlerInterface;
 use App\Domain\Repository\PasswordResetRepositoryInterface;
 use App\Domain\Repository\UserRepositoryInterface;
-use DateTimeImmutable;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -39,7 +38,7 @@ final readonly class ResetPasswordCommandHandler implements CommandHandlerInterf
         }
 
         $user->setPassword($this->passwordHasher->hashPassword($user, $command->newPassword));
-        $reset->setUsedAt(new DateTimeImmutable());
+        $reset->setUsedAt(new \DateTimeImmutable());
 
         $this->userRepository->save($user);
         $this->passwordResetRepository->save($reset);

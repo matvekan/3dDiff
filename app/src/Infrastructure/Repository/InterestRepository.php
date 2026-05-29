@@ -6,7 +6,6 @@ use App\Domain\Entity\Interest;
 use App\Domain\Repository\InterestRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use RuntimeException;
 
 /**
  * @extends ServiceEntityRepository<Interest>
@@ -34,7 +33,7 @@ class InterestRepository extends ServiceEntityRepository implements InterestRepo
     {
         $interest = $this->find($id);
         if (!$interest instanceof Interest) {
-            throw new RuntimeException('Interest not found');
+            throw new \RuntimeException('Interest not found');
         }
 
         return $interest;
@@ -42,6 +41,7 @@ class InterestRepository extends ServiceEntityRepository implements InterestRepo
 
     /**
      * @param array<string> $ids
+     *
      * @return array<Interest>
      */
     public function findByIds(array $ids): array

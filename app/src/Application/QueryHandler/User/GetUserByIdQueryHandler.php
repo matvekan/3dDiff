@@ -18,7 +18,8 @@ final readonly class GetUserByIdQueryHandler implements QueryHandlerInterface
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private UserDtoFactory $userDtoFactory,
-    ) {}
+    ) {
+    }
 
     public function __invoke(GetUserByIdQuery $query): ?UserDto
     {

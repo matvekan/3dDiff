@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\CommandHandler\Admin;
@@ -20,8 +21,8 @@ final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
         private UserRepositoryInterface $userRepository,
         private InterestRepositoryInterface $interestRepository,
         private TagAwareCacheInterface $cache,
-    )
-    {}
+    ) {
+    }
 
     public function __invoke(UpdateUserCommand $command): void
     {

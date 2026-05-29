@@ -14,7 +14,9 @@ use Symfony\Component\Uid\Uuid;
 #[Route('/api/v1/users/{id}', name: 'api_users_get_by_id', methods: ['GET'])]
 class GetUserByIdController
 {
-    public function __construct(private QueryBusInterface $queryBus){} 
+    public function __construct(private QueryBusInterface $queryBus)
+    {
+    }
 
     public function __invoke(string $id): JsonResponse
     {

@@ -12,7 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/v1/interests', name: 'interest.list', methods: ['GET'])]
 class ListInterestsController
 {
-    public function __construct(private QueryBusInterface $queryBus){}
+    public function __construct(private QueryBusInterface $queryBus)
+    {
+    }
 
     public function __invoke(): JsonResponse
     {

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace App\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'interests')]
 class Interest extends AbstractEntity
 {
-
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -67,5 +64,4 @@ class Interest extends AbstractEntity
 
         return $this;
     }
-
 }

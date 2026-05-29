@@ -11,5 +11,6 @@ final readonly class SendPasswordResetEmailCommand implements CommandInterface
     public function __construct(
         public string $email,
         public string $token,
-    ) {}
+    ) {
+    }
 }

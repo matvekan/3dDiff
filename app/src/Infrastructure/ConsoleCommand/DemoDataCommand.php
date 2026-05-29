@@ -21,6 +21,4 @@ class DemoDataCommand extends Command
     {
         return Command::SUCCESS;
     }
-
-
 }

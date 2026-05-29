@@ -15,6 +15,6 @@ final readonly class ResetPasswordCommand implements CommandInterface
         #[Assert\NotBlank]
         #[Assert\Length(min: 6, max: 255)]
         public string $newPassword,
-    )
-    {}
+    ) {
+    }
 }

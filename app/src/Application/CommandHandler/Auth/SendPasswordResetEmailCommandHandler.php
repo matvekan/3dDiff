@@ -14,7 +14,8 @@ final readonly class SendPasswordResetEmailCommandHandler implements CommandHand
 {
     public function __construct(
         private PasswordResetMailer $passwordResetMailer,
-    ) {}
+    ) {
+    }
 
     public function __invoke(SendPasswordResetEmailCommand $command): void
     {

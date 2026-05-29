@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Application\QueryHandler\Admin;
@@ -24,8 +25,8 @@ final readonly class ListUsersQueryHandler implements QueryHandlerInterface
     }
 
     /**
-     * @param ListUsersQuery $query
      * @return array<mixed>
+     *
      * @throws InvalidArgumentException
      * @throws JsonException|\JsonException
      */

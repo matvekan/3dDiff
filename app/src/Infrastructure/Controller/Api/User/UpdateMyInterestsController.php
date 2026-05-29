@@ -15,7 +15,9 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 #[Route('/api/v1/me/interests', name: 'user.me.interests.update', methods: ['PUT'])]
 class UpdateMyInterestsController
 {
-    public function __construct(private CommandBusInterface $commandBus){}
+    public function __construct(private CommandBusInterface $commandBus)
+    {
+    }
 
     public function __invoke(#[CurrentUser] User $user, #[MapRequestPayload] UpdateMyInterestsCommand $command): JsonResponse
     {

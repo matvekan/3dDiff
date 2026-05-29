@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Domain\ValueObject;
 
-use InvalidArgumentException;
 use Yokai\DoctrineValueObject\StringValueObject;
 
 final class Name implements StringValueObject
 {
     public function __construct(private string $name)
-
     {
         $trimmed = trim($name);
 
         if (mb_strlen($trimmed) < 2 || mb_strlen($trimmed) > 50) {
-            throw new InvalidArgumentException('The name is too short or too long.');
+            throw new \InvalidArgumentException('The name is too short or too long.');
         }
 
         $this->name = $trimmed;
@@ -28,7 +26,7 @@ final class Name implements StringValueObject
 
     public function toValue(): string
     {
-        return (string)$this;
+        return (string) $this;
     }
 
     public function __toString(): string
