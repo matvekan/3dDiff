@@ -10,6 +10,16 @@ use JsonSerializable;
 
 class UserDto implements JsonSerializable
 {
+
+    /**
+     * @param string $id
+     * @param string $email
+     * @param string $name
+     * @param string $role
+     * @param DateTimeImmutable|null $createdAt
+     * @param array<int, array{id: string, name: string|null}> $interests
+     *
+     */
     public function __construct(
         private string $id,
         private string $email,
@@ -40,6 +50,9 @@ class UserDto implements JsonSerializable
         return $this->createdAt;
     }
 
+    /**
+     * @return array<int, array{id: string, name: string|null}>
+     */
     public function getInterest(): array
     {
         return $this->interests;
@@ -50,13 +63,16 @@ class UserDto implements JsonSerializable
         return $this->id;
     }
 
-    public function jsonSerialize(): mixed
+    /**
+     * @return array<string, mixed>
+     */
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
             'email' => $this->email,
             'role' => $this->role,
-            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'createdAt' => $this->createdAt?->format('Y-m-d H:i:s'),
             'name' => $this->name,
             'interests' => $this->interests,
         ];

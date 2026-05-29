@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final readonly class UpdateMyInterestsCommand implements CommandInterface
 {
     public function __construct(
+        /** @var array<string> */
         #[Assert\NotNull]
         #[Assert\Type('array')]
         #[Assert\All([new Assert\Uuid()])]

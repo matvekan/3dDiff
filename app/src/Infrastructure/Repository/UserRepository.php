@@ -5,7 +5,6 @@ namespace App\Infrastructure\Repository;
 use App\Domain\Entity\User;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\ValueObject\Email;
-use App\Domain\ValueObject\Name;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -15,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
 /**
  * @extends ServiceEntityRepository<User>
+ * @implements UserProviderInterface<User>
  */
 
 class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface, UserProviderInterface
@@ -33,6 +33,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
     public function getByEmail(string $email): User
     {
+        /** @var User|null $user */
         $user = $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
             ->setParameter('email', new Email($email))
@@ -47,14 +48,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         return $user;
     }
 
-    public function getByName(string $name): User
-    {
-        $user = $this->findOneBy(['name' => new Name($name)]);
-        if (!$user) {
-            throw new UserNotFoundException();
-        }
-        return $user;
-    }
+
 
     public function getById(string $id): User
     {
@@ -96,7 +90,10 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
                 ->setParameter('interest', '%'.mb_strtolower($interest).'%');
         }
 
-        return $qb->getQuery()->getResult();
+        /** @var array<User> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface

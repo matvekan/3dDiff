@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Bus;
 
 use App\Application\Command\CommandBusInterface;
 use App\Application\Command\CommandInterface;
-use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-class MessengerCommandBus implements CommandBusInterface
+final readonly class MessengerCommandBus implements CommandBusInterface
 {
-    use HandleTrait;
-
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(private MessageBusInterface $messageBus)
     {
-        $this->messageBus = $messageBus;
     }
 
     public function execute(CommandInterface $command): mixed
     {
-        return $this->handle($command);
+        $envelope = $this->messageBus->dispatch($command);
+
+        $handledStamp = $envelope->last(HandledStamp::class);
+
+        return $handledStamp?->getResult();
     }
 }

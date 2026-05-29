@@ -178,6 +178,9 @@
       <path value="$PROJECT_DIR$/app/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/app/vendor/symfony/doctrine-messenger" />
       <path value="$PROJECT_DIR$/app/vendor/symfony/redis-messenger" />
+      <path value="$PROJECT_DIR$/app/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/app/vendor/phpstan/phpstan-symfony" />
+      <path value="$PROJECT_DIR$/app/vendor/phpstan/phpstan-doctrine" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />

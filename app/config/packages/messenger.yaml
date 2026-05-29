@@ -9,7 +9,7 @@ framework:
 
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': async
-
+            'App\Application\Command\Auth\SendPasswordResetEmailCommand': async
 # when@test:
 #    framework:
 #        messenger:

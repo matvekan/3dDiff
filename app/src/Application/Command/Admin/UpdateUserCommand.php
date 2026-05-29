@@ -14,6 +14,7 @@ final readonly class UpdateUserCommand implements CommandInterface
         public ?string $name = null,
         #[Assert\Choice(choices: [Role::USER->value, Role::ADMIN->value])]
         public ?string $role = null,
+        /** @var array<string>|null */
         #[Assert\Type('array')]
         #[Assert\All([new Assert\Uuid()])]
         public ?array $interestIds = null,

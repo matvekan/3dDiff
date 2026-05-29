@@ -27,6 +27,10 @@ class UserDtoFactory
         );
     }
 
+    /**
+     * @param array<User> $users
+     * @return array<UserDto>
+     */
     public function createFromArray(array $users): array
     {
         return array_map(fn(User $user) => $this->create($user), $users);

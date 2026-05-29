@@ -15,8 +15,15 @@ interface InterestRepositoryInterface
 
     public function getById(string $id): Interest;
 
+    /**
+     * @param array<string> $ids
+     * @return array<Interest>
+     */
     public function findByIds(array $ids): array;
 
+    /**
+     * @return array<Interest>
+     */
     public function findAllOrderedByName(): array;
 
 }

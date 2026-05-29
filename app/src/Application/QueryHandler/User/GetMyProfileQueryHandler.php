@@ -19,6 +19,10 @@ final readonly class GetMyProfileQueryHandler implements QueryHandlerInterface
     ) {
     }
 
+    /**
+     * @param GetMyProfileQuery $query
+     * @return array<string, mixed>
+     */
     public function __invoke(GetMyProfileQuery $query): array
     {
         $user = $this->userRepository->getById($query->userId);

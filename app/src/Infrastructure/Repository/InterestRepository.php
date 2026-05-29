@@ -40,6 +40,10 @@ class InterestRepository extends ServiceEntityRepository implements InterestRepo
         return $interest;
     }
 
+    /**
+     * @param array<string> $ids
+     * @return array<Interest>
+     */
     public function findByIds(array $ids): array
     {
         if ([] === $ids) {
@@ -49,6 +53,9 @@ class InterestRepository extends ServiceEntityRepository implements InterestRepo
         return $this->findBy(['id' => $ids]);
     }
 
+    /**
+     * @return array<Interest>
+     */
     public function findAllOrderedByName(): array
     {
         return $this->findBy([], ['name' => 'ASC']);

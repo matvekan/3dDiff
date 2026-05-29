@@ -27,7 +27,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     private ?string $password = null;
 
     #[ORM\Column(type: 'string', nullable: true, enumType: Role::class)]
-    private ?Role $role = Role::USER;
+    private Role $role = Role::USER;
 
     #[ORM\Column]
     private ?DateTimeImmutable $createdAt = null;
@@ -70,7 +70,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): string
     {
         return $this->role->value;
     }
@@ -85,10 +85,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     public function getRoles(): array
     {
         $roles = ['ROLE_USER'];
-
-        if (null !== $this->role) {
-            $roles[] = $this->role->value;
-        }
+        $roles[] = $this->role->value;
 
         return array_values(array_unique($roles));
     }
@@ -105,13 +102,22 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
         if (!isset($this->email)) {
             throw new \LogicException('User email must be set before authentication.');
         }
 
-        return $this->email->toValue();
+        $emailString = $this->email->toValue();
+
+        if ($emailString === '') {
+            throw new \LogicException('Email cannot be empty.');
+        }
+
+        return $emailString;
     }
 
     public function getCreatedAt(): ?DateTimeImmutable
@@ -160,11 +166,5 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         $this->interest->removeElement($interest);
 
         return $this;
-    }
-
-
-    public function getInterestIds(): array
-    {
-        return $this->interest->map(static fn (Interest $interest) => (string) $interest->getId())->toArray();
     }
 }
