@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Service;
+namespace App\Infrastructure\Service;
 
+use App\Domain\PasswordReset\PasswordResetMailerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-final readonly class PasswordResetMailer
+final readonly class PasswordResetMailer implements PasswordResetMailerInterface
 {
     public function __construct(
         private MailerInterface $mailer,

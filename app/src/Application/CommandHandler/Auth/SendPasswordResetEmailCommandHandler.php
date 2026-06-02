@@ -6,14 +6,14 @@ namespace App\Application\CommandHandler\Auth;
 
 use App\Application\Command\Auth\SendPasswordResetEmailCommand;
 use App\Application\Command\CommandHandlerInterface;
-use App\Application\Service\PasswordResetMailer;
+use App\Domain\PasswordReset\PasswordResetMailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 final readonly class SendPasswordResetEmailCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private PasswordResetMailer $passwordResetMailer,
+        private PasswordResetMailerInterface $passwordResetMailer,
     ) {
     }
 

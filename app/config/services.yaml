@@ -25,7 +25,7 @@ services:
 
 
 
-    App\Application\Service\PasswordResetMailer:
+    App\Infrastructure\Service\PasswordResetMailer:
         arguments:
             $fromEmail: '%app.mailer_from%'
             $frontendResetUrl: '%app.frontend_reset_url%'
