@@ -15,7 +15,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class CreateInterestCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private InterestRepositoryInterface $interestRepository,
+        private InterestRepositoryInterface $interests,
         private TagAwareCacheInterface $cache,
     ) {
     }
@@ -23,8 +23,8 @@ final readonly class CreateInterestCommandHandler implements CommandHandlerInter
     public function __invoke(CreateInterestCommand $command): void
     {
         $interest = new Interest();
-        $interest->setName($command->name);
-        $this->interestRepository->save($interest);
+        $interest->rename($command->name);
+        $this->interests->save($interest);
         $this->cache->invalidateTags(['users_list']);
     }
 }

@@ -31,7 +31,7 @@ class Interest extends AbstractEntity
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function rename(string $name): static
     {
         $this->name = $name;
 

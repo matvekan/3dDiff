@@ -10,7 +10,7 @@ class UserDtoFactory
     public function create(User $user): UserDto
     {
         $interests = [];
-        foreach ($user->getInterest() as $interest) {
+        foreach ($user->getInterests() as $interest) {
             $interests[] = [
                 'id' => (string) $interest->getId(),
                 'name' => $interest->getName(),
@@ -21,7 +21,7 @@ class UserDtoFactory
             (string) $user->getId(),
             $user->getEmail()->toValue(),
             $user->getName()->toValue(),
-            $user->getRole(),
+            (string) $user->getRole(),
             $user->getCreatedAt(),
             $interests
         );

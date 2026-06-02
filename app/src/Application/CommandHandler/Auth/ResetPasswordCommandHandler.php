@@ -18,29 +18,29 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 final readonly class ResetPasswordCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private PasswordResetRepositoryInterface $passwordResetRepository,
-        private UserRepositoryInterface $userRepository,
+        private PasswordResetRepositoryInterface $passwordResets,
+        private UserRepositoryInterface $users,
         private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
     public function __invoke(ResetPasswordCommand $command): void
     {
-        $reset = $this->passwordResetRepository->findValidByToken($command->token);
+        $reset = $this->passwordResets->findValidByToken($command->token);
         if (null === $reset) {
             throw new BadRequestHttpException('Invalid or expired token');
         }
 
         try {
-            $user = $this->userRepository->getByEmail((string) $reset->getEmail());
+            $user = $this->users->getByEmail((string) $reset->getEmail());
         } catch (UserNotFoundException) {
             throw new NotFoundHttpException('User not found');
         }
 
-        $user->setPassword($this->passwordHasher->hashPassword($user, $command->newPassword));
-        $reset->setUsedAt(new \DateTimeImmutable());
+        $user->updatePassword($this->passwordHasher->hashPassword($user, $command->newPassword));
+        $reset->markAsUsed(new \DateTimeImmutable());
 
-        $this->userRepository->save($user);
-        $this->passwordResetRepository->save($reset);
+        $this->users->save($user);
+        $this->passwordResets->save($reset);
     }
 }

@@ -31,7 +31,7 @@ class PasswordReset extends AbstractEntity
         return $this->token;
     }
 
-    public function setToken(Token $token): static
+    public function updateToken(Token $token): static
     {
         $this->token = $token;
 
@@ -43,7 +43,7 @@ class PasswordReset extends AbstractEntity
         return $this->email;
     }
 
-    public function setEmail(Email $email): static
+    public function updateEmail(Email $email): static
     {
         $this->email = $email;
 
@@ -55,7 +55,7 @@ class PasswordReset extends AbstractEntity
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(\DateTimeImmutable $expiresAt): static
+    public function updateExpiresAt(\DateTimeImmutable $expiresAt): static
     {
         $this->expiresAt = $expiresAt;
 
@@ -67,7 +67,7 @@ class PasswordReset extends AbstractEntity
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function updateCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -79,7 +79,7 @@ class PasswordReset extends AbstractEntity
         return $this->usedAt;
     }
 
-    public function setUsedAt(?\DateTimeImmutable $usedAt): static
+    public function markAsUsed(?\DateTimeImmutable $usedAt): static
     {
         $this->usedAt = $usedAt;
 

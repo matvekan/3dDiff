@@ -18,36 +18,31 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class UpdateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private InterestRepositoryInterface $interestRepository,
+        private UserRepositoryInterface $users,
+        private InterestRepositoryInterface $interests,
         private TagAwareCacheInterface $cache,
-    ) {
-    }
+    )
+    {}
 
     public function __invoke(UpdateUserCommand $command): void
     {
         try {
-            $user = $this->userRepository->getById($command->userId);
+            $user = $this->users->getById($command->userId);
         } catch (UserNotFoundException) {
             throw new NotFoundHttpException('User not found');
         }
 
         if (null !== $command->name) {
-            $user->setName(new Name($command->name));
+            $user->updateName(new Name($command->name));
         }
         if (null !== $command->role) {
-            $user->setRole($command->role);
+            $user->updateRole($command->role);
         }
         if (null !== $command->interestIds) {
-            foreach ($user->getInterest()->toArray() as $interest) {
-                $user->removeInterest($interest);
-            }
-            foreach ($this->interestRepository->findByIds($command->interestIds) as $interest) {
-                $user->addInterest($interest);
-            }
+            $user->syncInterests($this->interests->findByIds($command->interestIds));
         }
 
-        $this->userRepository->save($user);
+        $this->users->save($user);
         $this->cache->invalidateTags(['users_list']);
     }
 }

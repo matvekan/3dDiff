@@ -15,7 +15,7 @@ final readonly class GetMyProfileQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         private UserDtoFactory $userDtoFactory,
-        private UserRepositoryInterface $userRepository,
+        private UserRepositoryInterface $users,
     ) {
     }
 
@@ -24,7 +24,7 @@ final readonly class GetMyProfileQueryHandler implements QueryHandlerInterface
      */
     public function __invoke(GetMyProfileQuery $query): array
     {
-        $user = $this->userRepository->getById($query->userId);
+        $user = $this->users->getById($query->userId);
 
         return $this->userDtoFactory->create($user)->jsonSerialize();
     }

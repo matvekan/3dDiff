@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final readonly class ListInterestsQueryHandler implements QueryHandlerInterface
 {
-    public function __construct(private InterestRepositoryInterface $interestRepository)
+    public function __construct(private InterestRepositoryInterface $interests)
     {
     }
 
@@ -25,6 +25,6 @@ final readonly class ListInterestsQueryHandler implements QueryHandlerInterface
         return array_map(static fn (Interest $interest) => [
             'id' => (string) $interest->getId(),
             'name' => $interest->getName(),
-        ], $this->interestRepository->findAllOrderedByName());
+        ], $this->interests->findAllOrderedByName());
     }
 }

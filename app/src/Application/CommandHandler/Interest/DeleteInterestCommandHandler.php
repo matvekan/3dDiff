@@ -15,7 +15,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class DeleteInterestCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private InterestRepositoryInterface $interestRepository,
+        private InterestRepositoryInterface $interests,
         private TagAwareCacheInterface $cache,
     ) {
     }
@@ -23,12 +23,12 @@ final readonly class DeleteInterestCommandHandler implements CommandHandlerInter
     public function __invoke(DeleteInterestCommand $command): void
     {
         try {
-            $interest = $this->interestRepository->getById($command->interestId);
+            $interest = $this->interests->getById($command->interestId);
         } catch (\RuntimeException) {
             throw new NotFoundHttpException('Interest not found');
         }
 
-        $this->interestRepository->remove($interest);
+        $this->interests->remove($interest);
         $this->cache->invalidateTags(['users_list']);
     }
 }

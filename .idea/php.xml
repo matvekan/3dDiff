@@ -195,6 +195,10 @@
       <path value="$PROJECT_DIR$/app/vendor/evenement/evenement" />
       <path value="$PROJECT_DIR$/app/vendor/symfony/options-resolver" />
       <path value="$PROJECT_DIR$/app/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/app/vendor/radebatz/type-info-extras" />
+      <path value="$PROJECT_DIR$/app/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/app/vendor/nelmio/api-doc-bundle" />
+      <path value="$PROJECT_DIR$/app/vendor/symfony/asset" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />

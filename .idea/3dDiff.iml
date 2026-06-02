@@ -105,6 +105,10 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/react/stream" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/sebastian/diff" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/nelmio/api-doc-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/radebatz/type-info-extras" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/asset" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

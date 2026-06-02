@@ -20,8 +20,8 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 final readonly class ForgotPasswordCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
-        private PasswordResetRepositoryInterface $passwordResetRepository,
+        private UserRepositoryInterface $users,
+        private PasswordResetRepositoryInterface $passwordResets,
         private CommandBusInterface $commandBus)
     {
     }
@@ -29,19 +29,19 @@ final readonly class ForgotPasswordCommandHandler implements CommandHandlerInter
     public function __invoke(ForgotPasswordCommand $command): void
     {
         try {
-            $this->userRepository->getByEmail($command->email);
+            $this->users->getByEmail($command->email);
         } catch (UserNotFoundException) {
             return;
         }
 
         $token = bin2hex(random_bytes(32));
         $passwordReset = new PasswordReset()
-            ->setEmail(new Email($command->email))
-            ->setToken(new Token($token))
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setExpiresAt(new \DateTimeImmutable()->add(new \DateInterval('PT1H')));
+            ->updateEmail(new Email($command->email))
+            ->updateToken(new Token($token))
+            ->updateCreatedAt(new \DateTimeImmutable())
+            ->updateExpiresAt(new \DateTimeImmutable()->add(new \DateInterval('PT1H')));
 
-        $this->passwordResetRepository->save($passwordReset);
+        $this->passwordResets->save($passwordReset);
         $this->commandBus->execute(new SendPasswordResetEmailCommand($command->email, $token));
     }
 }

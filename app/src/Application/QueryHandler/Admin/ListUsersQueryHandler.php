@@ -18,7 +18,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class ListUsersQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
+        private UserRepositoryInterface $users,
         private UserDtoFactory $userDtoFactory,
         private TagAwareCacheInterface $cache,
     ) {
@@ -38,7 +38,7 @@ final readonly class ListUsersQueryHandler implements QueryHandlerInterface
             $item->expiresAfter(60);
             $item->tag('users_list');
 
-            $users = $this->userRepository->findByFilters(
+            $users = $this->users->findByFilters(
                 $query->name,
                 $query->email,
                 $query->role,

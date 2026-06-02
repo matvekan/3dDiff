@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 final readonly class GetUserByIdQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
+        private UserRepositoryInterface $users,
         private UserDtoFactory $userDtoFactory,
     ) {
     }
@@ -24,7 +24,7 @@ final readonly class GetUserByIdQueryHandler implements QueryHandlerInterface
     public function __invoke(GetUserByIdQuery $query): ?UserDto
     {
         try {
-            $user = $this->userRepository->getById($query->id);
+            $user = $this->users->getById($query->id);
         } catch (UserNotFoundException) {
             return null;
         }

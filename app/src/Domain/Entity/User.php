@@ -50,7 +50,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this->name;
     }
 
-    public function setName(Name $name): static
+    public function updateName(Name $name): static
     {
         $this->name = $name;
 
@@ -62,19 +62,19 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function updatePassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function getRole(): string
+    public function getRole(): ?string
     {
-        return $this->role->value;
+        return $this->role?->value;
     }
 
-    public function setRole(string $role): static
+    public function updateRole(string $role): static
     {
         $this->role = Role::from($role);
 
@@ -94,9 +94,8 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
      */
     public function setRoles(array $roles): static
     {
-        /** @var array<int, string> $roles */
         $role = $roles[0] ?? 'ROLE_USER';
-        $this->setRole($role);
+        $this->updateRole($role);
 
         return $this;
     }
@@ -124,7 +123,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function updateCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -136,7 +135,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this->email;
     }
 
-    public function setEmail(Email $email): static
+    public function updateEmail(Email $email): static
     {
         $this->email = $email;
 
@@ -146,9 +145,21 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     /**
      * @return Collection<int, Interest>
      */
-    public function getInterest(): Collection
+    public function getInterests(): Collection
     {
         return $this->interest;
+    }
+
+    /**
+     * @param Interest[] $interests
+     */
+    public function syncInterests(array $interests): void
+    {
+        $this->interest->clear();
+
+        foreach ($interests as $interest) {
+            $this->addInterest($interest);
+        }
     }
 
     public function addInterest(Interest $interest): static

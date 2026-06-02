@@ -21,7 +21,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 final readonly class RegisterUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
+        private UserRepositoryInterface $users,
         private UserPasswordHasherInterface $passwordHasher,
         private TagAwareCacheInterface $cache,
     ) {
@@ -30,19 +30,19 @@ final readonly class RegisterUserCommandHandler implements CommandHandlerInterfa
     public function __invoke(RegisterUserCommand $command): void
     {
         try {
-            $this->userRepository->getByEmail($command->email);
+            $this->users->getByEmail($command->email);
             throw new ConflictHttpException('Email already used.');
         } catch (UserNotFoundException) {
         }
 
         $user = new User();
-        $user->setName(new Name($command->name));
-        $user->setEmail(new Email($command->email));
-        $user->setCreatedAt(new \DateTimeImmutable());
-        $user->setRole(Role::USER->value);
-        $user->setPassword($this->passwordHasher->hashPassword($user, $command->password));
+        $user->updateName(new Name($command->name));
+        $user->updateEmail(new Email($command->email));
+        $user->updateCreatedAt(new \DateTimeImmutable());
+        $user->updateRole(Role::USER->value);
+        $user->updatePassword($this->passwordHasher->hashPassword($user, $command->password));
 
-        $this->userRepository->save($user);
+        $this->users->save($user);
         $this->cache->invalidateTags(['users_list']);
     }
 }
